@@ -32,7 +32,7 @@ function obj:update()
     self.menu = {}
     local header = {}
     header['x-api-key'] = self.api_key
-    print(self.stocks)
+    
     hs.http.asyncGet('https://yfapi.net/v6/finance/quote?symbols=' .. self.stocks, 
     header, function(status, body)
         if status ~= 200 then
@@ -58,14 +58,14 @@ function obj:update()
 
             if self.selected:lower() == quote.symbol:lower() then
                 self.indicator:setTitle(
-                    hs.styledtext.new(quote.regularMarketPrice, 
+                    hs.styledtext.new(string.format("%.2f", quote.regularMarketPrice), 
                     {color = {hex = color}, font = {name = 'Baloo', size = 16}})
                     )
             end
 
             table.insert(self.menu, {
                 title = hs.styledtext.new((quote.longName or quote.shortName) .. '\n')
-                    .. icon .. hs.styledtext.new(quote.regularMarketPrice .. ' ' .. string.format("%.2f", quote.regularMarketChange) .. '(' .. string.format("%.2f", quote.regularMarketChangePercent).. '%)'),
+                    .. icon .. hs.styledtext.new(string.format("%.2f", quote.regularMarketPrice) .. ' ' .. string.format("%.2f", quote.regularMarketChange) .. '(' .. string.format("%.2f", quote.regularMarketChangePercent).. '%)'),
                     checked = self.selected ~= nil and self.selected:lower() == quote.symbol:lower(),
                     fn = function() 
                         self.selected = quote.symbol
@@ -93,7 +93,7 @@ end
 
 function obj:setup(args)
     self.api_key = args.api_key
-    print(args.stocks)
+
     if args.stocks ~= nil then 
         self.stocks = args.stocks
     else
