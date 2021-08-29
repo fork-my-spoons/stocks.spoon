@@ -1,3 +1,3 @@
 # stocks
 
-![screenshot](./screenshots/screenshot1)
+![screenshot](./screenshots/screenshot1.png)
