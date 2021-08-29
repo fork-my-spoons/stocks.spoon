@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/fork-my-spoons/stocks.spoon/actions">
-    <img alt="Build" src="https://github.com/fork-my-spoons/stocks.spoon/workflows/build/badge.svg"/></a>
+    <img alt="Build" src="https://github.com/fork-my-spoons/stocks.spoon/actions/workflows/blank.yml/badge.svg"/></a>
   <a href="https://github.com/fork-my-spoons/stocks.spoon/issues">
     <img alt="GitHub issues" src="https://img.shields.io/github/issues/fork-my-spoons/stocks.spoon"/></a>
   <a href="https://github.com/fork-my-spoons/stocks.spoon/releases">
