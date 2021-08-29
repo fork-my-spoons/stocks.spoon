@@ -1,5 +1,14 @@
 # Stocks
 
+<p align="center">
+  <a href="https://github.com/fork-my-spoons/stocks.spoon/actions">
+    <img alt="Build" src="https://github.com/fork-my-spoons/stocks.spoon/workflows/build/badge.svg"/></a>
+  <a href="https://github.com/fork-my-spoons/stocks.spoon/issues">
+    <img alt="GitHub issues" src="https://img.shields.io/github/issues/fork-my-spoons/stocks.spoon"/></a>
+  <a href="https://github.com/fork-my-spoons/stocks.spoon/releases">
+    <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/fork-my-spoons/stocks.spoon/total"/></a>
+</p>
+
 A menu bar app showing stock prices for selected stocks based of  [yahoofinanceapi.com](https://www.yahoofinanceapi.com):
 
 ![screenshot](./screenshots/screenshot1.png)
