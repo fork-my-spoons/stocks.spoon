@@ -2,10 +2,10 @@ local obj = {}
 obj.__index = obj
 
 -- Metadata
-obj.name = "Stock"
+obj.name = "Stocks"
 obj.version = "1.0"
 obj.author = "Pavel Makhov"
-obj.homepage = "https://github.com/fork-my-spoons/github-pull-requests.spoon"
+obj.homepage = "https://github.com/fork-my-spoons/stocks.spoon"
 obj.license = "MIT - https://opensource.org/licenses/MIT"
 
 obj.indicator = nil
@@ -13,6 +13,11 @@ obj.iconPath = hs.spoons.resourcePath("icons")
 obj.api_key = nil
 obj.menu = {}
 obj.selected = nil
+obj.stocks = nil
+
+local trending_up_icon = hs.styledtext.new(' ', { font = {name = 'feather', size = 12 }, color = {hex = '#00873c'}})
+local trending_down_icon = hs.styledtext.new(' ', { font = {name = 'feather', size = 12 }, color = {hex = '#eb0f29'}})
+
 
 local function show_warning(text)
     hs.notify.new(function() end, {
@@ -27,6 +32,7 @@ function obj:update()
     self.menu = {}
     local header = {}
     header['x-api-key'] = self.api_key
+    print(self.stocks)
     hs.http.asyncGet('https://yfapi.net/v6/finance/quote?symbols=' .. self.stocks, 
     header, function(status, body)
         if status ~= 200 then
@@ -36,15 +42,20 @@ function obj:update()
 
         local response = hs.json.decode(body)
         local color
-        if response.quoteResponse.result[1].regularMarketChangePercent > 0 then 
-            color = '#00873c'
-        else
-            color = '#eb0f29'
-        end
+        
 
         self.selected = hs.settings.get('selected_stock') or response.quoteResponse.result[1].symbol
 
         for k, quote in pairs(response.quoteResponse.result) do
+            
+            if quote.regularMarketChangePercent > 0 then 
+                color = '#00873c'
+                icon = trending_up_icon
+            else
+                color = '#eb0f29'
+                icon = trending_down_icon
+            end
+
             if self.selected:lower() == quote.symbol:lower() then
                 self.indicator:setTitle(
                     hs.styledtext.new(quote.regularMarketPrice, 
@@ -53,8 +64,8 @@ function obj:update()
             end
 
             table.insert(self.menu, {
-                title = hs.styledtext.new(quote.longName .. '\n')
-                    .. hs.styledtext.new(quote.regularMarketPrice .. ' ' .. quote.regularMarketChange .. '(' .. quote.regularMarketChangePercent.. '%)'),
+                title = hs.styledtext.new((quote.longName or quote.shortName) .. '\n')
+                    .. icon .. hs.styledtext.new(quote.regularMarketPrice .. ' ' .. string.format("%.2f", quote.regularMarketChange) .. '(' .. string.format("%.2f", quote.regularMarketChangePercent).. '%)'),
                     checked = self.selected ~= nil and self.selected:lower() == quote.symbol:lower(),
                     fn = function() 
                         self.selected = quote.symbol
@@ -63,6 +74,13 @@ function obj:update()
                     end
             })
         end
+        
+        if self.indicator:title() == nil or self.indicator:title() == '' then
+            self.indicator:setTitle(
+                    hs.styledtext.new(response.quoteResponse.result[1].regularMarketPrice, 
+                    {color = {hex = color}, font = {name = 'Baloo', size = 16}})
+                    )
+                end
 
         self.indicator:setMenu(self.menu)
     end)
@@ -75,7 +93,12 @@ end
 
 function obj:setup(args)
     self.api_key = args.api_key
-    self.stocks = args.stocks or 'aapl,msft,fb'
+    print(args.stocks)
+    if args.stocks ~= nil then 
+        self.stocks = args.stocks
+    else
+        self.stocks = 'aapl,doge-usd,msft'
+    end
 end
 
 function obj:start()
