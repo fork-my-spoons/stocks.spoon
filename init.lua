@@ -14,6 +14,7 @@ obj.api_key = nil
 obj.menu = {}
 obj.selected = nil
 obj.stocks = nil
+obj.timer = nil
 
 local trending_up_icon = hs.styledtext.new(' ', { font = {name = 'feather', size = 12 }, color = {hex = '#00873c'}})
 local trending_down_icon = hs.styledtext.new(' ', { font = {name = 'feather', size = 12 }, color = {hex = '#eb0f29'}})
@@ -80,7 +81,17 @@ function obj:update()
                     hs.styledtext.new(response.quoteResponse.result[1].regularMarketPrice, 
                     {color = {hex = color}, font = {name = 'Baloo', size = 16}})
                     )
-                end
+        end
+
+        table.insert(self.menu, {title = '-'})
+        table.insert(self.menu, {
+            title = 'Updated at: ' .. os.date("%H:%M:%S"),
+            disabled = true
+        })
+        table.insert(self.menu, {
+            title = 'Update',
+            fn = function() self:update() end
+        })
 
         self.indicator:setMenu(self.menu)
     end)
@@ -89,6 +100,7 @@ end
 
 function obj:init()
     self.indicator = hs.menubar.new()
+    self.timer = hs.timer.new(900, function() self:update() end)
 end
 
 function obj:setup(args)
@@ -102,7 +114,8 @@ function obj:setup(args)
 end
 
 function obj:start()
-    self:update()
+    self.timer:fire()
+    self.timer:start()
 end
 
 
