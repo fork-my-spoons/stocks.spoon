@@ -11,7 +11,9 @@
 
 A menu bar app showing stock prices for selected stocks based of  [yahoofinanceapi.com](https://www.yahoofinanceapi.com):
 
-![screenshot](./screenshots/screenshot1.png)
+<p align="center">
+  <img src="https://github.com/fork-my-spoons/stocks.spoon/raw/main/screenshots/screenshot1.png"/>
+</p>
 
 # Installation
 
